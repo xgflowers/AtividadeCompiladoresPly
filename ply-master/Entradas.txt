@@ -1,0 +1,7 @@
+int j = 12;
+char x = "eu";
+float o= 12.12;
+int a = 2,b = 3,c = 1;
+char r, t;
+float _numero_;
+

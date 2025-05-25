@@ -3,65 +3,66 @@ import sys
 import ply.lex as lex
 import ply.yacc as yacc
 
-# ---------- Análise Léxica ----------
+# ---------- Tokens ----------
 
 tokens = (
-    'TYPE', 'ID', 'NUMBER', 'CHAR',
-    'PLUS', 'MINUS', 'TIMES', 'DIVIDE',
-    'EQUALS', 'SEMICOLON', 'LPAREN', 'RPAREN'
+    'TYPE', 'ID', 'NUMBER', 'CHAR_LITERAL', 'STRING_LITERAL',
+    'EQUALS', 'COMMA', 'SEMICOLON'
 )
 
-t_PLUS      = r'\+'
-t_MINUS     = r'-'
-t_TIMES     = r'\*'
-t_DIVIDE    = r'/'
+# Símbolos literais
+
 t_EQUALS    = r'='
+t_COMMA     = r','
 t_SEMICOLON = r';'
-t_LPAREN    = r'\('
-t_RPAREN    = r'\)'
 
-reserved = {'int':'TYPE', 'float':'TYPE', 'char':'TYPE'}
+# Palavras reservadas (tipos)
+reserved = {
+    'int':   'TYPE',
+    'float': 'TYPE',
+    'char':  'TYPE'
+}
 
+# Identificadores: letra ou '_' seguido de letras, dígitos ou '_'
 def t_ID(t):
-    r'[a-zA-Z_][a-zA-Z0-9_]*'
+    r'[A-Za-z_][A-Za-z0-9_]*'
     t.type = reserved.get(t.value, 'ID')
     return t
 
+# Números inteiros ou float (sem exponencial)
 def t_NUMBER(t):
-    r'\d+(\.\d+)?([eE][+-]?\d+)?'
-    try:
-        if '.' in t.value or 'e' in t.value.lower():
-            t.value = float(t.value)
-        else:
-            t.value = int(t.value)
-    except ValueError:
-        print(f"Erro léxico: número inválido {t.value}")
-        t.value = 0
+    r'\d+(?:\.\d+)?'
+    if '.' in t.value:
+        t.value = float(t.value)
+    else:
+        t.value = int(t.value)
     return t
 
-def t_CHAR(t):
+# Literais de caractere único
+def t_CHAR_LITERAL(t):
     r"'(\\.|[^\\'])'"
     t.value = t.value[1:-1]
     return t
 
-# Ignora comentários
+# Literais de cadeia de caracteres
+def t_STRING_LITERAL(t):
+    r'"(\\.|[^\\"])*"'
+    t.value = t.value[1:-1]
+    return t
 
+# Comentários de linha (//...)
 def t_COMMENT(t):
     r'//.*'
     pass
 
+# Comentários em bloco (/*...*/)
 def t_COMMENT_BLOCK(t):
     r'/\*(.|\n)*?\*/'
     t.lexer.lineno += t.value.count('\n')
     pass
 
-# Ignorar espaços e tabs
-
-t_ignore = ' \t'
-
-def t_newline(t):
-    r'\n+'
-    t.lexer.lineno += len(t.value)
+# Ignorar espaços, tabs e quebras de linha
+t_ignore = ' \t\n'
 
 def t_error(t):
     print(f"Erro léxico: caractere inválido '{t.value[0]}'")
@@ -69,46 +70,46 @@ def t_error(t):
 
 lexer = lex.lex()
 
-# ---------- Análise Sintática ----------
+# ---------- Gramática ----------
 
-precedence = (
-    ('right', 'UMINUS'),
-    ('left', 'PLUS', 'MINUS'),
-    ('left', 'TIMES', 'DIVIDE'),
-)
+# declaration : TYPE declarator_list SEMICOLON
+def p_declaration(p):
+    'declaration : TYPE declarator_list SEMICOLON'
+    p[0] = ('decl', p[1], p[2])
+    print('Declaração válida:', p[0])
 
-def p_assignment(p):
-    'assignment : TYPE ID EQUALS expression SEMICOLON'
-    p[0] = ('assign', p[1], p[2], p[4])
-    print('Entrada válida. Árvore sintática:', p[0])
+# declarator_list : declarator (COMMA declarator)*
+def p_declarator_list_single(p):
+    'declarator_list : declarator'
+    p[0] = [p[1]]
 
-def p_expression_binop(p):
-    '''expression : expression PLUS expression
-                  | expression MINUS expression
-                  | expression TIMES expression
-                  | expression DIVIDE expression'''
-    p[0] = ('binop', p[2], p[1], p[3])
+def p_declarator_list_multi(p):
+    'declarator_list : declarator_list COMMA declarator'
+    p[0] = p[1] + [p[3]]
 
-def p_expression_group(p):
-    'expression : LPAREN expression RPAREN'
-    p[0] = p[2]
+# declarator : ID | ID EQUALS initializer
+def p_declarator_no_init(p):
+    'declarator : ID'
+    p[0] = ('var', p[1], None)
 
-def p_expression_number(p):
-    'expression : NUMBER'
+def p_declarator_init(p):
+    'declarator : ID EQUALS initializer'
+    p[0] = ('var', p[1], p[3])
+
+# initializer : NUMBER | CHAR_LITERAL | STRING_LITERAL
+def p_initializer_number(p):
+    'initializer : NUMBER'
     p[0] = p[1]
 
-def p_expression_id(p):
-    'expression : ID'
+def p_initializer_char(p):
+    'initializer : CHAR_LITERAL'
     p[0] = p[1]
 
-def p_expression_char(p):
-    'expression : CHAR'
+def p_initializer_string(p):
+    'initializer : STRING_LITERAL'
     p[0] = p[1]
 
-def p_expression_uminus(p):
-    'expression : MINUS expression %prec UMINUS'
-    p[0] = ('uminus', p[2])
-
+# Tratamento de erros sintáticos
 def p_error(p):
     if p:
         print(f"Erro sintático: token inesperado '{p.value}'")
@@ -117,26 +118,48 @@ def p_error(p):
 
 parser = yacc.yacc()
 
-def process_line(linha):
-    # Exibe tokens reconhecidos
+# Processa uma linha de declaração
+def process_line(line):
     print("\nTokens reconhecidos:")
-    lexer.input(linha)
+    lexer.input(line)
     for tok in lexer:
-        print(f"  {tok.type:10} {tok.value!r}")
-    # Análise sintática
-    parser.parse(linha, lexer=lexer)
-    print()
+        print(f"  {tok.type:15} {tok.value!r}")
+    parser.parse(line, lexer=lexer)
 
-if __name__ == '__main__':
-    if len(sys.argv) > 1:
-        process_line(' '.join(sys.argv[1:]))
-    else:
+# Leitura de arquivo .txt, declaração única ou modo interativo
+def main():
+    # Modo interativo
+    if len(sys.argv) == 1:
         print("Analisador pronto. Digite 'exit' para sair.")
         while True:
             try:
-                linha = input('> ')
+                line = input('> ')
             except EOFError:
                 break
-            if linha.lower() == 'exit':
+            if line.lower() == 'exit':
                 break
-            process_line(linha)
+            if line.strip():
+                process_line(line)
+    # Arquivo de declarações em lote
+    elif len(sys.argv) == 2 and sys.argv[1].endswith('.txt'):
+        arquivo = sys.argv[1]
+        try:
+            with open(arquivo, 'r', encoding='utf-8') as f:
+                for line in f:
+                    line = line.strip()
+                    if line:
+                        process_line(line)
+        except FileNotFoundError:
+            print(f"Arquivo não encontrado: {arquivo}")
+    # Declaração única como argumento
+    elif len(sys.argv) == 2:
+        process_line(sys.argv[1])
+    else:
+        print("Uso:")
+        print("  python analisador_c_.py            # modo interativo")
+        print("  python analisador_c_.py arquivo.txt  # processa lote de declarações")
+        print("  python analisador_c_.py \"int x = 42;\"    # declaração única")
+        sys.exit(1)
+
+if __name__ == '__main__':
+    main()

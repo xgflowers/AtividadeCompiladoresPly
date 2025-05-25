@@ -1,85 +1,103 @@
-Analisador de Atribuições em C
+# Analisador de Declarações em C
 
-Este repositório contém um analisador léxico e sintático, em Python, para validar linhas de atribuição simples na linguagem C, usando PLY (Python Lex-Yacc).
+Este repositório contém um analisador léxico e sintático em Python, usando PLY (Python Lex-Yacc), para reconhecimento de declarações de variáveis no estilo da linguagem C.
 
-Requisitos
+## Requisitos
 
-Python 3.x
+- Python 3.x
+- PLY
 
-PLY
+## Instalação
 
-Instalação do PLY:
-
+```bash
 pip install ply
+```
 
-Uso
+## Uso
 
-Modo interativo
+### Modo Interativo
 
-Abra o terminal na pasta do projeto.
+1. Abra o terminal na pasta do projeto.
+2. Execute:
+   ```bash
+   python analisador_c_.py
+   ```
+3. No prompt, digite sua declaração (ex.: `int x;`, `float y = 3.14;`, `char s = "oi";`) e pressione Enter.
+4. Para sair, digite `exit`.
 
-Execute:
+### Linha de Comando
 
-python analisador_c_.py
+Você também pode processar um arquivo de declarações em lote:
 
-No prompt, digite sua linha de atribuição (ex.: int x = 10 + y;) e pressione Enter.
+```bash
+python analisador_c_.py entradas.txt
+```
 
-Para sair, digite exit.
+Ou passar uma única declaração como argumento:
 
-Linha de comando
-
-Você também pode passar a atribuição diretamente como argumento:
-
-python analisador_c_.py "int x = -2.5e1 + y;"
+```bash
+python analisador_c_.py "int x = 42;"
+```
 
 O analisador exibirá:
 
-Tokens reconhecidos pela análise léxica.
+1. **Tokens reconhecidos** pela análise léxica;
+2. **Resultado da análise sintática** (declaração válida ou mensagem de erro).
 
-Resultado da análise sintática: árvore sintática ou mensagens de erro.
+## Exemplos
 
-Exemplos
-
+```bash
 $ python analisador_c_.py
 Analisador pronto. Digite 'exit' para sair.
 > float z = (3.14 * r) / -2e3;
 
 Tokens reconhecidos:
-  TYPE       'float'
-  ID         'z'
-  EQUALS     '='
-  LPAREN     '('
-  NUMBER     3.14
-  TIMES      '*'
-  ID         'r'
-  RPAREN     ')'
-  DIVIDE     '/'
-  MINUS      '-'
-  NUMBER     2000.0
-  SEMICOLON  ';'
+  TYPE            'float'
+  ID              'z'
+  EQUALS          '='
+  LPAREN          '('
+  NUMBER          3.14
+  TIMES           '*'
+  ID              'r'
+  RPAREN          ')'
+  DIVIDE          '/'
+  MINUS           '-'
+  NUMBER          2000.0
+  SEMICOLON       ';'
 
-Entrada válida. Árvore sintática: ('assign', 'float', 'z', ('binop', '/', ('binop', '*', 3.14, 'r'), ('uminus', 2000.0)))
+Declaração válida: ('decl', 'float', [('var', 'z', ('binop', '/', ('binop', '*', 3.14, 'r'), ('uminus', 2000.0)))] )
 > exit
+```
 
-Estrutura de tokens
+```bash
+$ python analisador_c_.py "int a, b = 2, c;"
 
-enumeração dos principais tokens reconhecidos:
+Tokens reconhecidos:
+  TYPE            'int'
+  ID              'a'
+  COMMA           ','
+  ID              'b'
+  EQUALS          '='
+  NUMBER          2
+  COMMA           ','
+  ID              'c'
+  SEMICOLON       ';'
 
-TYPE: int, float, char
+Declaração válida: ('decl', 'int', [('var','a',None),('var','b',2),('var','c',None)])
+```
 
-ID: identificadores válidos ([a-zA-Z_][a-zA-Z0-9_]*)
+## Tokens Reconhecidos
 
-NUMBER: inteiros, floats e notação exponencial (123, 3.14, 1e-3)
+- **TYPE**: `int`, `float`, `char`
+- **ID**: identificadores válidos (`[A-Za-z_][A-Za-z0-9_]*`)
+- **NUMBER**: inteiros e floats (`123`, `3.14`)
+- **CHAR_LITERAL**: literais de caractere (`'x'`, `"
+"`)
+- **STRING_LITERAL**: cadeias de caracteres (`"texto"`)
+- **EQUALS**: `=` 
+- **COMMA**: `,`
+- **SEMICOLON**: `;`
 
-CHAR: literais de caractere ('x', '\n', ''')
-
-PLUS, MINUS, TIMES, DIVIDE, EQUALS, SEMICOLON, LPAREN, RPAREN
-
-Licença
+## Licença
 
 MIT
-
-
-
-
-

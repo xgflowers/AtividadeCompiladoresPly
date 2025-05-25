@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'rightUMINUSleftPLUSMINUSleftTIMESDIVIDECHAR DIVIDE EQUALS ID LPAREN MINUS NUMBER PLUS RPAREN SEMICOLON TIMES TYPEassignment : TYPE ID EQUALS expression SEMICOLONexpression : expression PLUS expression\n| expression MINUS expression\n| expression TIMES expression\n| expression DIVIDE expressionexpression : LPAREN expression RPARENexpression : NUMBERexpression : IDexpression : CHARexpression : MINUS expression %prec UMINUS'
+_lr_signature = 'CHAR_LITERAL COMMA EQUALS ID NUMBER SEMICOLON STRING_LITERAL TYPEdeclaration : TYPE declarator_list SEMICOLONdeclarator_list : declaratordeclarator_list : declarator_list COMMA declaratordeclarator : IDdeclarator : ID EQUALS initializerinitializer : NUMBERinitializer : CHAR_LITERALinitializer : STRING_LITERAL'
     
-_lr_action_items = {'TYPE':([0,],[2,]),'$end':([1,11,],[0,-1,]),'ID':([2,4,7,8,12,13,14,15,],[3,5,5,5,5,5,5,5,]),'EQUALS':([3,],[4,]),'LPAREN':([4,7,8,12,13,14,15,],[8,8,8,8,8,8,8,]),'NUMBER':([4,7,8,12,13,14,15,],[9,9,9,9,9,9,9,]),'CHAR':([4,7,8,12,13,14,15,],[10,10,10,10,10,10,10,]),'MINUS':([4,5,6,7,8,9,10,12,13,14,15,16,17,18,19,20,21,22,],[7,-8,13,7,7,-7,-9,7,7,7,7,13,13,-2,-3,-4,-5,-6,]),'SEMICOLON':([5,6,9,10,16,18,19,20,21,22,],[-8,11,-7,-9,-10,-2,-3,-4,-5,-6,]),'PLUS':([5,6,9,10,16,17,18,19,20,21,22,],[-8,12,-7,-9,12,12,-2,-3,-4,-5,-6,]),'TIMES':([5,6,9,10,16,17,18,19,20,21,22,],[-8,14,-7,-9,14,14,14,14,-4,-5,-6,]),'DIVIDE':([5,6,9,10,16,17,18,19,20,21,22,],[-8,15,-7,-9,15,15,15,15,-4,-5,-6,]),'RPAREN':([5,9,10,16,17,18,19,20,21,22,],[-8,-7,-9,-10,22,-2,-3,-4,-5,-6,]),}
+_lr_action_items = {'TYPE':([0,],[2,]),'$end':([1,6,],[0,-1,]),'ID':([2,7,],[5,5,]),'SEMICOLON':([3,4,5,9,10,11,12,13,],[6,-2,-4,-3,-5,-6,-7,-8,]),'COMMA':([3,4,5,9,10,11,12,13,],[7,-2,-4,-3,-5,-6,-7,-8,]),'EQUALS':([5,],[8,]),'NUMBER':([8,],[11,]),'CHAR_LITERAL':([8,],[12,]),'STRING_LITERAL':([8,],[13,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'assignment':([0,],[1,]),'expression':([4,7,8,12,13,14,15,],[6,16,17,18,19,20,21,]),}
+_lr_goto_items = {'declaration':([0,],[1,]),'declarator_list':([2,],[3,]),'declarator':([2,7,],[4,9,]),'initializer':([8,],[10,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -26,15 +26,13 @@ for _k, _v in _lr_goto_items.items():
        _lr_goto[_x][_k] = _y
 del _lr_goto_items
 _lr_productions = [
-  ("S' -> assignment","S'",1,None,None,None),
-  ('assignment -> TYPE ID EQUALS expression SEMICOLON','assignment',5,'p_assignment','analisador_c_assignment.py',91),
-  ('expression -> expression PLUS expression','expression',3,'p_expression_binop','analisador_c_assignment.py',96),
-  ('expression -> expression MINUS expression','expression',3,'p_expression_binop','analisador_c_assignment.py',97),
-  ('expression -> expression TIMES expression','expression',3,'p_expression_binop','analisador_c_assignment.py',98),
-  ('expression -> expression DIVIDE expression','expression',3,'p_expression_binop','analisador_c_assignment.py',99),
-  ('expression -> LPAREN expression RPAREN','expression',3,'p_expression_group','analisador_c_assignment.py',103),
-  ('expression -> NUMBER','expression',1,'p_expression_number','analisador_c_assignment.py',107),
-  ('expression -> ID','expression',1,'p_expression_id','analisador_c_assignment.py',111),
-  ('expression -> CHAR','expression',1,'p_expression_char','analisador_c_assignment.py',115),
-  ('expression -> MINUS expression','expression',2,'p_expression_uminus','analisador_c_assignment.py',119),
+  ("S' -> declaration","S'",1,None,None,None),
+  ('declaration -> TYPE declarator_list SEMICOLON','declaration',3,'p_declaration','analisador_c_.py',78),
+  ('declarator_list -> declarator','declarator_list',1,'p_declarator_list_single','analisador_c_.py',84),
+  ('declarator_list -> declarator_list COMMA declarator','declarator_list',3,'p_declarator_list_multi','analisador_c_.py',88),
+  ('declarator -> ID','declarator',1,'p_declarator_no_init','analisador_c_.py',93),
+  ('declarator -> ID EQUALS initializer','declarator',3,'p_declarator_init','analisador_c_.py',97),
+  ('initializer -> NUMBER','initializer',1,'p_initializer_number','analisador_c_.py',102),
+  ('initializer -> CHAR_LITERAL','initializer',1,'p_initializer_char','analisador_c_.py',106),
+  ('initializer -> STRING_LITERAL','initializer',1,'p_initializer_string','analisador_c_.py',110),
 ]
