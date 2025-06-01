@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'CHAR_LITERAL COMMA EQUALS ID NUMBER SEMICOLON STRING_LITERAL TYPEdeclaration : TYPE declarator_list SEMICOLONdeclarator_list : declaratordeclarator_list : declarator_list COMMA declaratordeclarator : IDdeclarator : ID EQUALS initializerinitializer : NUMBERinitializer : CHAR_LITERALinitializer : STRING_LITERAL'
+_lr_signature = 'programleftPLUSMINUSleftTIMESDIVIDEBREAK CASE CHAR_LITERAL COLON COMMA DEFAULT DIVEQ DIVIDE ELSE EQ EQUALS GE GT ID IF LBRACE LE LPAREN LT MINUS MINUSEQ NE NUMBER PLUS PLUSEQ RBRACE RPAREN SEMICOLON STRING_LITERAL SWITCH TIMES TIMESEQ TYPE\nprogram : stmt_list\n\nstmt_list : stmt stmt_list\n          | empty\n\nstmt : var_decl\n     | assign_stmt\n     | if_stmt\n     | switch_stmt\n     | break_stmt\n\nvar_decl : TYPE declarator_list SEMICOLON\ndeclarator_list : declaratordeclarator_list : declarator_list COMMA declaratordeclarator : IDdeclarator : ID EQUALS initializerinitializer : NUMBERinitializer : CHAR_LITERALinitializer : STRING_LITERAL\nassign_stmt : ID assign_op expr SEMICOLON\n\nassign_op : EQUALS\n          | PLUSEQ\n          | MINUSEQ\n          | TIMESEQ\n          | DIVEQ\nexpr : expr PLUS termexpr : expr MINUS termexpr : termterm : term TIMES factorterm : term DIVIDE factorterm : factorfactor : IDfactor : NUMBERfactor : LPAREN expr RPARENcond : expr relop expr\nrelop : EQ\n      | NE\n      | LT\n      | LE\n      | GT\n      | GE\n\nif_stmt : IF LPAREN cond RPAREN compound_stmt opt_else\n\nopt_else : ELSE compound_stmt\n         | empty\n\nswitch_stmt : SWITCH LPAREN ID RPAREN LBRACE case_block_list opt_default RBRACE\n\ncase_block_list : case_block case_block_list\n                | empty\n\ncase_block : case_label_list compound_stmt\ncase_label_list : CASE ID COLONcase_label_list : CASE ID COLON case_label_list\nopt_default : DEFAULT COLON compound_stmt\n            | empty\ncompound_stmt : LBRACE stmt_list RBRACEbreak_stmt : BREAK SEMICOLONempty :'
     
-_lr_action_items = {'TYPE':([0,],[2,]),'$end':([1,6,],[0,-1,]),'ID':([2,7,],[5,5,]),'SEMICOLON':([3,4,5,9,10,11,12,13,],[6,-2,-4,-3,-5,-6,-7,-8,]),'COMMA':([3,4,5,9,10,11,12,13,],[7,-2,-4,-3,-5,-6,-7,-8,]),'EQUALS':([5,],[8,]),'NUMBER':([8,],[11,]),'CHAR_LITERAL':([8,],[12,]),'STRING_LITERAL':([8,],[13,]),}
+_lr_action_items = {'$end':([0,1,2,3,4,5,6,7,8,9,15,27,28,45,65,69,71,78,79,86,],[-52,0,-1,-52,-3,-4,-5,-6,-7,-8,-2,-51,-9,-17,-52,-39,-41,-40,-50,-42,]),'TYPE':([0,3,5,6,7,8,9,27,28,45,65,66,69,71,78,79,86,],[10,10,-4,-5,-6,-7,-8,-51,-9,-17,-52,10,-39,-41,-40,-50,-42,]),'ID':([0,3,5,6,7,8,9,10,19,20,21,22,23,24,25,26,27,28,29,36,45,46,47,48,49,52,53,54,55,56,57,58,65,66,69,71,77,78,79,86,],[11,11,-4,-5,-6,-7,-8,18,31,-18,-19,-20,-21,-22,31,39,-51,-9,18,31,-17,31,31,31,31,31,-33,-34,-35,-36,-37,-38,-52,11,-39,-41,85,-40,-50,-42,]),'IF':([0,3,5,6,7,8,9,27,28,45,65,66,69,71,78,79,86,],[12,12,-4,-5,-6,-7,-8,-51,-9,-17,-52,12,-39,-41,-40,-50,-42,]),'SWITCH':([0,3,5,6,7,8,9,27,28,45,65,66,69,71,78,79,86,],[13,13,-4,-5,-6,-7,-8,-51,-9,-17,-52,13,-39,-41,-40,-50,-42,]),'BREAK':([0,3,5,6,7,8,9,27,28,45,65,66,69,71,78,79,86,],[14,14,-4,-5,-6,-7,-8,-51,-9,-17,-52,14,-39,-41,-40,-50,-42,]),'RBRACE':([3,4,5,6,7,8,9,15,27,28,45,65,66,68,69,71,72,73,74,75,78,79,80,82,83,84,86,89,],[-52,-3,-4,-5,-6,-7,-8,-2,-51,-9,-17,-52,-52,-52,-39,-41,79,-52,-52,-44,-40,-50,86,-49,-43,-45,-42,-48,]),'EQUALS':([11,18,],[20,30,]),'PLUSEQ':([11,],[21,]),'MINUSEQ':([11,],[22,]),'TIMESEQ':([11,],[23,]),'DIVEQ':([11,],[24,]),'LPAREN':([12,13,19,20,21,22,23,24,25,36,46,47,48,49,52,53,54,55,56,57,58,],[25,26,36,-18,-19,-20,-21,-22,36,36,36,36,36,36,36,-33,-34,-35,-36,-37,-38,]),'SEMICOLON':([14,16,17,18,31,32,33,34,35,40,41,42,43,44,60,61,62,63,64,],[27,28,-10,-12,-29,45,-25,-28,-30,-11,-13,-14,-15,-16,-23,-24,-26,-27,-31,]),'COMMA':([16,17,18,40,41,42,43,44,],[29,-10,-12,-11,-13,-14,-15,-16,]),'NUMBER':([19,20,21,22,23,24,25,30,36,46,47,48,49,52,53,54,55,56,57,58,],[35,-18,-19,-20,-21,-22,35,42,35,35,35,35,35,35,-33,-34,-35,-36,-37,-38,]),'CHAR_LITERAL':([30,],[43,]),'STRING_LITERAL':([30,],[44,]),'TIMES':([31,33,34,35,60,61,62,63,64,],[-29,48,-28,-30,48,48,-26,-27,-31,]),'DIVIDE':([31,33,34,35,60,61,62,63,64,],[-29,49,-28,-30,49,49,-26,-27,-31,]),'PLUS':([31,32,33,34,35,38,50,60,61,62,63,64,67,],[-29,46,-25,-28,-30,46,46,-23,-24,-26,-27,-31,46,]),'MINUS':([31,32,33,34,35,38,50,60,61,62,63,64,67,],[-29,47,-25,-28,-30,47,47,-23,-24,-26,-27,-31,47,]),'EQ':([31,33,34,35,38,60,61,62,63,64,],[-29,-25,-28,-30,53,-23,-24,-26,-27,-31,]),'NE':([31,33,34,35,38,60,61,62,63,64,],[-29,-25,-28,-30,54,-23,-24,-26,-27,-31,]),'LT':([31,33,34,35,38,60,61,62,63,64,],[-29,-25,-28,-30,55,-23,-24,-26,-27,-31,]),'LE':([31,33,34,35,38,60,61,62,63,64,],[-29,-25,-28,-30,56,-23,-24,-26,-27,-31,]),'GT':([31,33,34,35,38,60,61,62,63,64,],[-29,-25,-28,-30,57,-23,-24,-26,-27,-31,]),'GE':([31,33,34,35,38,60,61,62,63,64,],[-29,-25,-28,-30,58,-23,-24,-26,-27,-31,]),'RPAREN':([31,33,34,35,37,39,50,60,61,62,63,64,67,],[-29,-25,-28,-30,51,59,64,-23,-24,-26,-27,-31,-32,]),'LBRACE':([51,59,70,76,87,88,90,],[66,68,66,66,66,-46,-47,]),'ELSE':([65,79,],[70,-50,]),'DEFAULT':([68,73,74,75,79,83,84,],[-52,81,-52,-44,-50,-43,-45,]),'CASE':([68,74,79,84,88,],[77,77,-50,-45,77,]),'COLON':([81,85,],[87,88,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'declaration':([0,],[1,]),'declarator_list':([2,],[3,]),'declarator':([2,7,],[4,9,]),'initializer':([8,],[10,]),}
+_lr_goto_items = {'program':([0,],[1,]),'stmt_list':([0,3,66,],[2,15,72,]),'stmt':([0,3,66,],[3,3,3,]),'empty':([0,3,65,66,68,73,74,],[4,4,71,4,75,82,75,]),'var_decl':([0,3,66,],[5,5,5,]),'assign_stmt':([0,3,66,],[6,6,6,]),'if_stmt':([0,3,66,],[7,7,7,]),'switch_stmt':([0,3,66,],[8,8,8,]),'break_stmt':([0,3,66,],[9,9,9,]),'declarator_list':([10,],[16,]),'declarator':([10,29,],[17,40,]),'assign_op':([11,],[19,]),'expr':([19,25,36,52,],[32,38,50,67,]),'term':([19,25,36,46,47,52,],[33,33,33,60,61,33,]),'factor':([19,25,36,46,47,48,49,52,],[34,34,34,34,34,62,63,34,]),'cond':([25,],[37,]),'initializer':([30,],[41,]),'relop':([38,],[52,]),'compound_stmt':([51,70,76,87,],[65,78,84,89,]),'opt_else':([65,],[69,]),'case_block_list':([68,74,],[73,83,]),'case_block':([68,74,],[74,74,]),'case_label_list':([68,74,88,],[76,76,90,]),'opt_default':([73,],[80,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -26,13 +26,57 @@ for _k, _v in _lr_goto_items.items():
        _lr_goto[_x][_k] = _y
 del _lr_goto_items
 _lr_productions = [
-  ("S' -> declaration","S'",1,None,None,None),
-  ('declaration -> TYPE declarator_list SEMICOLON','declaration',3,'p_declaration','analisador_c_.py',78),
-  ('declarator_list -> declarator','declarator_list',1,'p_declarator_list_single','analisador_c_.py',84),
-  ('declarator_list -> declarator_list COMMA declarator','declarator_list',3,'p_declarator_list_multi','analisador_c_.py',88),
-  ('declarator -> ID','declarator',1,'p_declarator_no_init','analisador_c_.py',93),
-  ('declarator -> ID EQUALS initializer','declarator',3,'p_declarator_init','analisador_c_.py',97),
-  ('initializer -> NUMBER','initializer',1,'p_initializer_number','analisador_c_.py',102),
-  ('initializer -> CHAR_LITERAL','initializer',1,'p_initializer_char','analisador_c_.py',106),
-  ('initializer -> STRING_LITERAL','initializer',1,'p_initializer_string','analisador_c_.py',110),
+  ("S' -> program","S'",1,None,None,None),
+  ('program -> stmt_list','program',1,'p_program','analisador_c_.py',168),
+  ('stmt_list -> stmt stmt_list','stmt_list',2,'p_stmt_list','analisador_c_.py',175),
+  ('stmt_list -> empty','stmt_list',1,'p_stmt_list','analisador_c_.py',176),
+  ('stmt -> var_decl','stmt',1,'p_stmt','analisador_c_.py',186),
+  ('stmt -> assign_stmt','stmt',1,'p_stmt','analisador_c_.py',187),
+  ('stmt -> if_stmt','stmt',1,'p_stmt','analisador_c_.py',188),
+  ('stmt -> switch_stmt','stmt',1,'p_stmt','analisador_c_.py',189),
+  ('stmt -> break_stmt','stmt',1,'p_stmt','analisador_c_.py',190),
+  ('var_decl -> TYPE declarator_list SEMICOLON','var_decl',3,'p_var_decl','analisador_c_.py',198),
+  ('declarator_list -> declarator','declarator_list',1,'p_declarator_list_single','analisador_c_.py',203),
+  ('declarator_list -> declarator_list COMMA declarator','declarator_list',3,'p_declarator_list_multi','analisador_c_.py',207),
+  ('declarator -> ID','declarator',1,'p_declarator_no_init','analisador_c_.py',211),
+  ('declarator -> ID EQUALS initializer','declarator',3,'p_declarator_init','analisador_c_.py',215),
+  ('initializer -> NUMBER','initializer',1,'p_initializer_number','analisador_c_.py',219),
+  ('initializer -> CHAR_LITERAL','initializer',1,'p_initializer_char','analisador_c_.py',223),
+  ('initializer -> STRING_LITERAL','initializer',1,'p_initializer_string','analisador_c_.py',227),
+  ('assign_stmt -> ID assign_op expr SEMICOLON','assign_stmt',4,'p_assign_stmt','analisador_c_.py',234),
+  ('assign_op -> EQUALS','assign_op',1,'p_assign_op','analisador_c_.py',240),
+  ('assign_op -> PLUSEQ','assign_op',1,'p_assign_op','analisador_c_.py',241),
+  ('assign_op -> MINUSEQ','assign_op',1,'p_assign_op','analisador_c_.py',242),
+  ('assign_op -> TIMESEQ','assign_op',1,'p_assign_op','analisador_c_.py',243),
+  ('assign_op -> DIVEQ','assign_op',1,'p_assign_op','analisador_c_.py',244),
+  ('expr -> expr PLUS term','expr',3,'p_expr_plus','analisador_c_.py',251),
+  ('expr -> expr MINUS term','expr',3,'p_expr_minus','analisador_c_.py',255),
+  ('expr -> term','expr',1,'p_expr_term','analisador_c_.py',259),
+  ('term -> term TIMES factor','term',3,'p_term_times','analisador_c_.py',263),
+  ('term -> term DIVIDE factor','term',3,'p_term_div','analisador_c_.py',267),
+  ('term -> factor','term',1,'p_term_factor','analisador_c_.py',271),
+  ('factor -> ID','factor',1,'p_factor_id','analisador_c_.py',275),
+  ('factor -> NUMBER','factor',1,'p_factor_num','analisador_c_.py',279),
+  ('factor -> LPAREN expr RPAREN','factor',3,'p_factor_paren','analisador_c_.py',283),
+  ('cond -> expr relop expr','cond',3,'p_cond','analisador_c_.py',289),
+  ('relop -> EQ','relop',1,'p_relop','analisador_c_.py',294),
+  ('relop -> NE','relop',1,'p_relop','analisador_c_.py',295),
+  ('relop -> LT','relop',1,'p_relop','analisador_c_.py',296),
+  ('relop -> LE','relop',1,'p_relop','analisador_c_.py',297),
+  ('relop -> GT','relop',1,'p_relop','analisador_c_.py',298),
+  ('relop -> GE','relop',1,'p_relop','analisador_c_.py',299),
+  ('if_stmt -> IF LPAREN cond RPAREN compound_stmt opt_else','if_stmt',6,'p_if_stmt','analisador_c_.py',307),
+  ('opt_else -> ELSE compound_stmt','opt_else',2,'p_opt_else','analisador_c_.py',313),
+  ('opt_else -> empty','opt_else',1,'p_opt_else','analisador_c_.py',314),
+  ('switch_stmt -> SWITCH LPAREN ID RPAREN LBRACE case_block_list opt_default RBRACE','switch_stmt',8,'p_switch_stmt','analisador_c_.py',326),
+  ('case_block_list -> case_block case_block_list','case_block_list',2,'p_case_block_list','analisador_c_.py',332),
+  ('case_block_list -> empty','case_block_list',1,'p_case_block_list','analisador_c_.py',333),
+  ('case_block -> case_label_list compound_stmt','case_block',2,'p_case_block','analisador_c_.py',343),
+  ('case_label_list -> CASE ID COLON','case_label_list',3,'p_case_label_list_single','analisador_c_.py',349),
+  ('case_label_list -> CASE ID COLON case_label_list','case_label_list',4,'p_case_label_list_multi','analisador_c_.py',353),
+  ('opt_default -> DEFAULT COLON compound_stmt','opt_default',3,'p_opt_default','analisador_c_.py',359),
+  ('opt_default -> empty','opt_default',1,'p_opt_default','analisador_c_.py',360),
+  ('compound_stmt -> LBRACE stmt_list RBRACE','compound_stmt',3,'p_compound_stmt','analisador_c_.py',370),
+  ('break_stmt -> BREAK SEMICOLON','break_stmt',2,'p_break_stmt','analisador_c_.py',376),
+  ('empty -> <empty>','empty',0,'p_empty','analisador_c_.py',382),
 ]

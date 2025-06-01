@@ -1,7 +1,31 @@
-int j = 12;
-char x = "eu";
-float o= 12.12;
-int a = 2,b = 3,c = 1;
-char r, t;
-float _numero_;
+// Declarações iniciais
+int a, b = 3, c;
+int resultado;
+
+// Atribuições
+a = 10;
+b *= 2;
+c = a / b;
+
+// Comando if-else
+if (c == 1) {
+    resultado = a + b;
+} else {
+    resultado = a - b;
+}
+
+// Comando switch-case
+switch (resultado) {
+    case VALOR1: {
+        x = x + 1;
+        break;
+    }
+    case VALOR2: case VALOR3: {
+        x = x * 2;
+        break;
+    }
+    default: {
+        x = 0;
+    }
+}
 
