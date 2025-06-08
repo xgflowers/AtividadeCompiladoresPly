@@ -6,6 +6,7 @@ Este repositório contém um analisador léxico e sintático em Python, usando P
 - Atribuições aritméticas simples e compostas.
 - Reconhecimento de variaveis int, float e char.
 - Comandos de seleção (`if` / `else` e `switch` / `case` / `default`).
+- Comandos de repetição (while e for).
 - Blocos de comandos delimitados por chaves, incluindo suporte a `break;`.
 
 ---
@@ -293,6 +294,85 @@ Tokens reconhecidos:
   )
 > exit
 
+$ python analisador_c_.py
+Analisador pronto. Digite 'exit' para sair.
+> while (count != 0) {
+    count -= 1;
+    total = total + count;
+}
+
+Tokens reconhecidos:
+  WHILE        'while'
+  LPAREN       '('
+  ID           'count'
+  NE           '!='
+  NUMBER       0
+  RPAREN       ')'
+  LBRACE       '{'
+  ID           'count'
+  MINUSEQ      '-='
+  NUMBER       1
+  SEMICOLON    ';'
+  ID           'total'
+  EQUALS       '='
+  ID           'total'
+  PLUS         '+'
+  ID           'count'
+  SEMICOLON    ';'
+  RBRACE       '}'
+Árvore sintática (AST): [('while', ('cond', '!=', ('id', 'count'), ('num', 0)), ('block', [('assign', 'count', '-=', ('num', 1)), ('assign', 'total', '=', ('+', ('id', 'total'), ('id', 'count')))]))]
+> exit
+
+$ python analisador_c_.py
+Analisador pronto. Digite 'exit' para sair.
+
+for (i = 0; i < n; i += 1) {
+    for (j = 0; j < m; j += 1) {
+        result = result + 1;
+    }
+}
+
+Tokens reconhecidos:
+  FOR          'for'
+  LPAREN       '('
+  ID           'i'
+  EQUALS       '='
+  NUMBER       0
+  SEMICOLON    ';'
+  ID           'i'
+  LT           '<'
+  ID           'n'
+  SEMICOLON    ';'
+  ID           'i'
+  PLUSEQ       '+='
+  NUMBER       1
+  RPAREN       ')'
+  LBRACE       '{'
+  FOR          'for'
+  LPAREN       '('
+  ID           'j'
+  EQUALS       '='
+  NUMBER       0
+  SEMICOLON    ';'
+  ID           'j'
+  LT           '<'
+  ID           'm'
+  SEMICOLON    ';'
+  ID           'j'
+  PLUSEQ       '+='
+  NUMBER       1
+  RPAREN       ')'
+  LBRACE       '{'
+  ID           'result'
+  EQUALS       '='
+  ID           'result'
+  PLUS         '+'
+  NUMBER       1
+  SEMICOLON    ';'
+  RBRACE       '}'
+  RBRACE       '}'
+Árvore sintática (AST): [('for', ('init', 'i', '=', ('num', 0)), ('cond', '<', ('id', 'i'), ('id', 'n')), ('iter', 'i', '+=', ('num', 1)), ('block', [('for', ('init', 'j', '=', ('num', 0)), ('cond', '<', ('id', 'j'), ('id', 'm')), ('iter', 'j', '+=', ('num', 1)), ('block', [('assign', 'result', '=', ('+', ('id', 'result'), ('num', 1)))]))]))]
+> exit
 
 ## Tokens Reconhecidos
 TIPOS (TYPE): int, float, char
@@ -304,6 +384,10 @@ SWITCH (switch)
 CASE (case)
 DEFAULT (default)
 BREAK (break)
+
+COMANDOS DE REPETIÇÃO: 
+WHILE (while)
+FOR (for)
 
 LITERIAS E IDENTIFICADORES:
 ID: identificadores válidos ([A-Za-z_][A-Za-z0-9_]*)

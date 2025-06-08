@@ -29,3 +29,27 @@ switch (resultado) {
     }
 }
 
+// While com decremento
+while (count != 0) {
+    count -= 1;
+    total = total + count;
+}
+
+// For com aninhamento
+for (i = 0; i < n; i += 1) {
+    for (j = 0; j < m; j += 1) {
+        result = result + 1;
+    }
+}
+
+// Mistura com algumas sentenças
+int x, y = 5;
+x = y * 2;
+
+while (x > 0) {
+    x -= 1;
+}
+
+for (z = 0; z < x; z += 2) {
+    y = y + z;
+}
